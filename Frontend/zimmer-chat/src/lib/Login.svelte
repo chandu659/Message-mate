@@ -81,13 +81,6 @@
               <p class="mt-2 text-sm text-red-500">{errorMessage}</p>
             {/if}
 
-            <div class="mt-4 flex items-center justify-between">
-              <label for="remember" class="flex items-center gap-2">
-                <input id="remember" type="checkbox" name="remember" class="outline-none focus:outline focus:outline-sky-300">
-                <span class="text-xs">Remember me</span>
-              </label>
-              
-            </div>
             <div class="mt-4 flex items-center justify-end gap-x-2">
               <button on:click={signUp}
                 class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:ring hover:ring-white h-10 px-4 py-2 duration-200">Register</button>

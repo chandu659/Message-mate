@@ -28,7 +28,7 @@ export async function loadMessages(pb, chatId) {
       expand: 'user',
       sort: 'created',
     });
-    messagesStore.set(messageList.items); /
+    messagesStore.set(messageList.items);
   } catch (err) {
     console.error("Error fetching messages:", err);
   }
