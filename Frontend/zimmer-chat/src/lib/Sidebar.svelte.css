@@ -1,0 +1,89 @@
+.sidebar {
+    width: 300px;
+    background-color: #1a1a1a;
+    color: white;
+    height: 100vh;
+    padding: 10px;
+  }
+
+  .app-heading {
+    font-size: 1.2em;
+    color: hsl(34, 89%, 71%);
+    text-align: center;
+    background-color: #6C78A4;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 15px;
+    font-weight: bold;
+  }
+
+  .user-item, .chat-item {
+    display: flex;
+    align-items: center;
+    position: relative;
+    gap: 10px;
+    width: 100%;
+    padding: 0px ;
+    color: white;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    text-align: left;
+  }
+
+  .user-name {
+    text-transform: capitalize;
+    flex-grow: 1;
+  }
+
+  .user-item:hover, .chat-item:hover {
+  background-color: #333;
+  border-radius: 10px;
+}
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #febf03;
+  }
+
+  .chat-item:hover .delete-icon {
+    display: inline;
+  }
+
+  .delete-icon {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 1;
+    border: none;
+    opacity: 1; 
+    outline: none;
+  }
+
+  h3 {
+    color: #aaa;
+    text-align: center;
+    margin-bottom: 5px;
+    padding: 5px 0;
+    font-size: 1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #444;
+  }
+
+  h3.users-heading {
+    background-color: #333;
+    border-radius: 20px;
+  }
+
+  h3.chats-heading {
+    background-color: #444;
+    border-radius: 20px;
+    margin-top: 10px;
+  }
