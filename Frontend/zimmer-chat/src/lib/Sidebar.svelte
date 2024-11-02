@@ -23,30 +23,34 @@
   });
 
   async function ensureChatExists(user) {
-    const existingChat = chats.find(chat => 
-      chat.expand?.users?.some(u => u.id === user.id) &&
-      chat.expand?.users?.some(u => u.id === $currentUser.id)
-    );
+  const existingChat = chats.find(chat => 
+    chat.expand?.users?.some(u => u.id === user.id) &&
+    chat.expand?.users?.some(u => u.id === $currentUser.id)
+  );
 
-    if (existingChat) {
-      updateSelectedChat(existingChat);
-    } else {
-      try {
-        const newChat = await pb.collection('chats').create({
-          users: [$currentUser.id, user.id]
-        });
+  if (existingChat) {
+    console.log("Existing chat found:", existingChat);
+    updateSelectedChat(existingChat);
+  } else {
+    try {
+      const newChat = await pb.collection('chats').create({
+        users: [$currentUser.id, user.id]
+      });
 
-        await loadChats(pb, $currentUser);
+      await loadChats(pb, $currentUser);
 
-        const updatedChat = await pb.collection('chats').getOne(newChat.id, {
-          expand: 'users'
-        });
-        updateSelectedChat(updatedChat); 
-      } catch (err) {
-        console.error("Error creating new chat:", err);
-      }
+      const updatedChat = await pb.collection('chats').getOne(newChat.id, {
+        expand: 'users'
+      });
+      console.log("New chat created and selected:", updatedChat);
+      updateSelectedChat(updatedChat); 
+    } catch (err) {
+      console.error("Error creating new chat:", err);
     }
   }
+}
+
+
 
   async function deleteChat(chatId) {
   try {

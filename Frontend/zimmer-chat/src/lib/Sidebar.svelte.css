@@ -1,9 +1,12 @@
 .sidebar {
-    width: 300px;
+    width: 100%;
+    max-width: 300px;
     background-color: #1a1a1a;
     color: white;
     height: 100vh;
     padding: 10px;
+    display :flex;
+    flex-direction: column;
   }
 
   .app-heading {
@@ -20,8 +23,7 @@
   .user-item, .chat-item {
     display: flex;
     align-items: center;
-    position: relative;
-    gap: 10px;
+    gap: 5px;
     width: 100%;
     padding: 0px ;
     color: white;
@@ -30,6 +32,7 @@
     border: none;
     border-radius: 10px;
     text-align: left;
+    justify-content: space-between;
   }
 
   .user-name {
@@ -47,6 +50,7 @@
     height: 30px;
     border-radius: 50%;
     background-color: #febf03;
+    flex-shrink: 0;
   }
 
   .chat-item:hover .delete-icon {
@@ -60,17 +64,19 @@
     font-size: 16px;
     cursor: pointer;
     opacity: 1;
-    border: none;
-    opacity: 1; 
     outline: none;
   }
+
+  .delete-icon:focus, .delete-icon:active {
+    outline: none; 
+}
 
   h3 {
     color: #aaa;
     text-align: center;
     margin-bottom: 5px;
     padding: 5px 0;
-    font-size: 1em;
+    font-size: .9em;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -87,3 +93,15 @@
     border-radius: 20px;
     margin-top: 10px;
   }
+  
+@media (max-width: 768px) {
+  .sidebar {
+      max-width: 100%;
+      padding: 5px;
+  }
+
+  .app-heading {
+      font-size: 1em;
+      padding: 10px;
+  }
+}

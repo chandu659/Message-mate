@@ -6,78 +6,114 @@
   import './Chat.svelte.css';
 
   let selectedChat = null;
+  let lastChatId = null; 
   let messages = [];
   let newMessage = '';
   let unsubscribeFromChat = null;
-  let chatMessagesDiv; 
+  let chatMessagesDiv;
 
-  // Scroll to the bottom of the chat
-  async function scrollToBottom() {
-    if (chatMessagesDiv) {
-      await tick(); 
-      chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
-      console.log("Scroll to bottom");
+  function resetChat() {
+    console.log("Resetting chat");
+    messages = [];
+    if (unsubscribeFromChat) {
+      unsubscribeFromChat();
+      unsubscribeFromChat = null;
     }
   }
 
-  // Load initial messages, and subscribe to real time updates when mounted
-  onMount(async () => {
-    selectedChatStore.subscribe(async (value) => {
-      selectedChat = value;
+  async function loadMessagesAndSubscribe() {
+  
+    const chatId = selectedChat?.id;
+    if (!chatId) {
+      console.warn("No valid chat id. Exiting loadMessagesAndSubscribe.");
+      return;
+    }
 
-      if (selectedChat) {
-        const resultList = await pb.collection('messages').getList(1, 50, {
-          filter: `chatid="${selectedChat.id}"`,
-          sort: 'created',
-          expand: 'user',
-        });
-        messages = resultList.items;
-        scrollToBottom();
+    if (lastChatId === chatId) {
+      console.log("Already subscribed to this chat:", chatId);
+      return; 
+    }
 
-        if (unsubscribeFromChat) {
-          unsubscribeFromChat();
-        }
+    lastChatId = chatId;
+    resetChat(); 
 
-        // Subscribe to real-time updates for messages in the selected chat
-        unsubscribeFromChat = await pb.collection('messages').subscribe('*', async ({ action, record }) => {
-          if (record.chatid === selectedChat.id) {
-            if (action === 'create') {
-              // Fetch associated user for the new message
-              const user = await pb.collection('users').getOne(record.user);
-              record.expand = { user };
-              messages = [...messages, record];
-              scrollToBottom(); 
-            } else if (action === 'delete') {
-              messages = messages.filter((m) => m.id !== record.id);
-            }
+    try {
+      console.log("Loading messages for chat:", chatId);
+      const resultList = await pb.collection('messages').getList(1, 50, {
+        filter: `chatid="${chatId}"`,
+        sort: 'created',
+        expand: 'user',
+      });
+
+      messages = resultList.items;
+      console.log("Messages loaded:", messages);
+
+      await scrollToBottom();
+
+      unsubscribeFromChat = await pb.collection('messages').subscribe('*', async ({ action, record }) => {
+        if (record.chatid === chatId) {
+          if (action === 'create') {
+            const user = await pb.collection('users').getOne(record.user);
+            record.expand = { user };
+            messages = [...messages, record];
+            await scrollToBottom();
+          } else if (action === 'delete') {
+            messages = messages.filter((m) => m.id !== record.id);
           }
-        });
+        }
+      });
+
+    } catch (error) {
+      console.error("Error loading messages or setting up subscription:", error);
+    }
+  }
+
+
+  let unsubscribeSelectedChat = null;
+  onMount(() => {
+    unsubscribeSelectedChat = selectedChatStore.subscribe(async (value) => {
+      console.log("Selected chat updated:", value); 
+
+      if (value && value.id && value.id !== lastChatId) {
+        selectedChat = value;
+        console.log("Loading messages for selected chat with ID:", selectedChat.id);
+        await loadMessagesAndSubscribe();
+      } else if (!value || !value.id) {
+        resetChat();
+        lastChatId = null; 
       }
     });
   });
 
-  // Unsubscribe from real-time updates when component is destroyed
   onDestroy(() => {
-    if (unsubscribeFromChat) {
-      unsubscribeFromChat();
-    }
+    console.log("Component is being destroyed, cleaning up subscriptions");
+    if (unsubscribeSelectedChat) unsubscribeSelectedChat();
+    if (unsubscribeFromChat) unsubscribeFromChat();
   });
 
-  // Send a new message
+  async function scrollToBottom() {
+    if (chatMessagesDiv) {
+      await tick();
+      chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+    }
+  }
+
   async function handleSendMessage() {
-    const data = {
-      Text: newMessage,
-      user: $currentUser.id,
-      chatid: selectedChat.id,
-    };
-    await pb.collection('messages').create(data);
-    newMessage = ''; 
+    if (selectedChat && newMessage.trim()) {
+      const data = {
+        Text: newMessage,
+        user: $currentUser.id,
+        chatid: selectedChat.id,
+      };
+      await pb.collection('messages').create(data);
+      newMessage = '';
+    }
   }
 
   // Scroll to bottom whenever messages array changes
   $: messages, scrollToBottom();
-</script>
 
+</script>
 
 <div class="chat-content">
   {#if selectedChat}
@@ -90,6 +126,7 @@
       {/each}
     </div>
 
+    <!-- Render chat messages -->
     <div class="chat-messages" bind:this={chatMessagesDiv}>
       {#each messages as message (message.id)}
         <div class="msg {message.expand?.user?.id === $currentUser.id ? 'sent' : 'received'}">
@@ -97,7 +134,8 @@
         </div>
       {/each}
     </div>
-    
+
+    <!-- Message form -->
     <form class="message-form" on:submit|preventDefault={handleSendMessage}>
       <input type="text" placeholder="Type a message..." bind:value={newMessage} />
       <button type="submit">Send</button>
