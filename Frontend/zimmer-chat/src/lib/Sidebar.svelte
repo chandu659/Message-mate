@@ -1,9 +1,10 @@
 `<script>
-  import { onMount } from 'svelte';
+  import { onMount , onDestroy} from 'svelte';
   import { usersStore, chatsStore, updateSelectedChat } from './store';
   import { currentUser, pb } from './pocketbase';
   import { getAvatarUrl } from './util/avatar';
   import { loadUsers, loadChats } from './util/chat';
+  import { selectedChatStore } from './store';
   import Delete from './Delete.svelte';
   import './Sidebar.svelte.css';
 
@@ -11,6 +12,7 @@
   let chats = [];
   let showDelete = false;
   let chatToDelete = null;
+  let unsubscribeFromChats = null;
 
   usersStore.subscribe(value => users = value);
   chatsStore.subscribe(value => chats = value);
@@ -19,7 +21,26 @@
     if ($currentUser) {  
       await loadUsers(pb, $currentUser);  
       await loadChats(pb, $currentUser); 
+
+      unsubscribeFromChats = await pb.collection('chats').subscribe('*', ({ action, record }) => {
+        if (action === 'delete') {
+          chatsStore.update(chats => chats.filter(chat => chat.id !== record.id));
+          if (record.id === $selectedChatStore.id) {
+            updateSelectedChat(null);
+          }
+        } else if (action === 'create') {
+          if (record.users.includes($currentUser.id)) {
+            pb.collection('chats').getOne(record.id, { expand: 'users' }).then(updatedChat => {
+              chatsStore.update(chats => [...chats, updatedChat]);
+            });
+          }
+        }
+      });
     }
+  });
+
+  onDestroy(() => {
+    if (unsubscribeFromChats) unsubscribeFromChats();
   });
 
   async function ensureChatExists(user) {
@@ -36,9 +57,7 @@
       const newChat = await pb.collection('chats').create({
         users: [$currentUser.id, user.id]
       });
-
       await loadChats(pb, $currentUser);
-
       const updatedChat = await pb.collection('chats').getOne(newChat.id, {
         expand: 'users'
       });
@@ -49,8 +68,6 @@
     }
   }
 }
-
-
 
   async function deleteChat(chatId) {
   try {
