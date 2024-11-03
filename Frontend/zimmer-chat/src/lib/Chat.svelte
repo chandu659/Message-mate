@@ -12,6 +12,15 @@
   let unsubscribeFromChat = null;
   let chatMessagesDiv;
 
+  selectedChatStore.subscribe(value => {
+    selectedChat = value;
+    if (selectedChat) {
+      loadMessagesAndSubscribe();
+    } else {
+      resetChat();
+    }
+  });
+
   function resetChat() {
     console.log("Resetting chat");
     messages = [];
@@ -22,7 +31,8 @@
   }
 
   async function loadMessagesAndSubscribe() {
-  
+    if (!selectedChat || !selectedChat.id) return;
+    
     const chatId = selectedChat?.id;
     if (!chatId) {
       console.warn("No valid chat id. Exiting loadMessagesAndSubscribe.");

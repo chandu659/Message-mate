@@ -25,9 +25,14 @@
       unsubscribeFromChats = await pb.collection('chats').subscribe('*', ({ action, record }) => {
         if (action === 'delete') {
           chatsStore.update(chats => chats.filter(chat => chat.id !== record.id));
-          if (record.id === $selectedChatStore.id) {
-            updateSelectedChat(null);
+          
+          //reset chat, if current chat is deleted
+          selectedChatStore.update(selectedChat => {
+          if (selectedChat?.id === record.id) {
+            return null;
           }
+          return selectedChat;
+        });
         } else if (action === 'create') {
           if (record.users.includes($currentUser.id)) {
             pb.collection('chats').getOne(record.id, { expand: 'users' }).then(updatedChat => {
