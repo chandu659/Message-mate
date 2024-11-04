@@ -5,7 +5,7 @@ export async function loadUsers(pb, currentUser) {
     const userList = await pb.collection('users').getList(1, 50, {autoCancel: false});
     usersStore.set(userList.items.filter(user => user.id !== currentUser.id)); 
   } catch (err) {
-    console.error("Error fetching users:", err);
+    
   }
 }
 
@@ -17,7 +17,7 @@ export async function loadChats(pb, currentUser) {
     }, { autoCancel: false});
     chatsStore.set(chatList.items); 
   } catch (err) {
-    console.error("Error fetching chats:", err);
+    
   }
 }
 
@@ -30,7 +30,7 @@ export async function loadMessages(pb, chatId) {
     });
     messagesStore.set(messageList.items);
   } catch (err) {
-    console.error("Error fetching messages:", err);
+    
   }
 }
 
@@ -47,7 +47,7 @@ export async function sendMessage(pb, currentUser, selectedChat, text) {
     await pb.collection('messages').create(data);
     loadMessages(pb, selectedChat.id); 
   } catch (err) {
-    console.error("Error sending message:", err);
+    
   }
 }
 

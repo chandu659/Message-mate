@@ -12,17 +12,17 @@
   let unsubscribeFromChat = null;
   let chatMessagesDiv;
 
-  selectedChatStore.subscribe(value => {
+  const unsubscribeSelectedChat = selectedChatStore.subscribe(async (value) => {
     selectedChat = value;
-    if (selectedChat) {
-      loadMessagesAndSubscribe();
+    if (selectedChat && selectedChat.id !== lastChatId) {
+      await loadMessagesAndSubscribe();
     } else {
       resetChat();
+      lastChatId = null;
     }
   });
 
   function resetChat() {
-    console.log("Resetting chat");
     messages = [];
     if (unsubscribeFromChat) {
       unsubscribeFromChat();
@@ -32,23 +32,14 @@
 
   async function loadMessagesAndSubscribe() {
     if (!selectedChat || !selectedChat.id) return;
-    
-    const chatId = selectedChat?.id;
-    if (!chatId) {
-      console.warn("No valid chat id. Exiting loadMessagesAndSubscribe.");
-      return;
-    }
 
-    if (lastChatId === chatId) {
-      console.log("Already subscribed to this chat:", chatId);
-      return; 
-    }
+    const chatId = selectedChat.id;
+    if (lastChatId === chatId) return; 
 
     lastChatId = chatId;
-    resetChat(); 
+    resetChat();
 
     try {
-      console.log("Loading messages for chat:", chatId);
       const resultList = await pb.collection('messages').getList(1, 50, {
         filter: `chatid="${chatId}"`,
         sort: 'created',
@@ -56,8 +47,6 @@
       });
 
       messages = resultList.items;
-      console.log("Messages loaded:", messages);
-
       await scrollToBottom();
 
       unsubscribeFromChat = await pb.collection('messages').subscribe('*', async ({ action, record }) => {
@@ -72,34 +61,10 @@
           }
         }
       });
-
     } catch (error) {
-      console.error("Error loading messages or setting up subscription:", error);
+
     }
   }
-
-
-  let unsubscribeSelectedChat = null;
-  onMount(() => {
-    unsubscribeSelectedChat = selectedChatStore.subscribe(async (value) => {
-      console.log("Selected chat updated:", value); 
-
-      if (value && value.id && value.id !== lastChatId) {
-        selectedChat = value;
-        console.log("Loading messages for selected chat with ID:", selectedChat.id);
-        await loadMessagesAndSubscribe();
-      } else if (!value || !value.id) {
-        resetChat();
-        lastChatId = null; 
-      }
-    });
-  });
-
-  onDestroy(() => {
-    console.log("Component is being destroyed, cleaning up subscriptions");
-    if (unsubscribeSelectedChat) unsubscribeSelectedChat();
-    if (unsubscribeFromChat) unsubscribeFromChat();
-  });
 
   async function scrollToBottom() {
     if (chatMessagesDiv) {
@@ -115,14 +80,21 @@
         user: $currentUser.id,
         chatid: selectedChat.id,
       };
-      await pb.collection('messages').create(data);
-      newMessage = '';
+      try {
+        await pb.collection('messages').create(data);
+        newMessage = '';
+      } catch (error) {
+
+      }
     }
   }
 
-  // Scroll to bottom whenever messages array changes
-  $: messages, scrollToBottom();
+  onDestroy(() => {
+    if (unsubscribeSelectedChat) unsubscribeSelectedChat();
+    if (unsubscribeFromChat) unsubscribeFromChat();
+  });
 
+  $: messages, scrollToBottom();
 </script>
 
 <div class="chat-content">
@@ -135,7 +107,6 @@
         {/if}
       {/each}
     </div>
-
     <!-- Render chat messages -->
     <div class="chat-messages" bind:this={chatMessagesDiv}>
       {#each messages as message (message.id)}
@@ -145,10 +116,15 @@
       {/each}
     </div>
 
-    <!-- Message form -->
     <form class="message-form" on:submit|preventDefault={handleSendMessage}>
       <input type="text" placeholder="Type a message..." bind:value={newMessage} />
       <button type="submit">Send</button>
     </form>
+  {:else}
+    <div class="no-chat-selected">
+      <p>Select a user to chat.</p>
+    </div>
   {/if}
 </div>
+
+

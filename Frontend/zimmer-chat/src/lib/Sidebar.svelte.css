@@ -1,5 +1,6 @@
 .sidebar {
     width: 100%;
+    flex: 0 0 300px;
     max-width: 300px;
     background-color: #1a1a1a;
     color: white;
@@ -7,10 +8,11 @@
     padding: 10px;
     display :flex;
     flex-direction: column;
+    box-sizing: border-box;
   }
 
   .app-heading {
-    font-size: 1.2em;
+    font-size: 1.4em;
     color: hsl(34, 89%, 71%);
     text-align: center;
     background-color: #6C78A4;
@@ -96,8 +98,7 @@
   
 @media (max-width: 768px) {
   .sidebar {
-      max-width: 100%;
-      padding: 5px;
+      max-width: 250px;
   }
 
   .app-heading {
