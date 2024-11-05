@@ -95,14 +95,69 @@
     border-radius: 20px;
     margin-top: 10px;
   }
-  
+
 @media (max-width: 768px) {
   .sidebar {
       max-width: 250px;
   }
 
   .app-heading {
-      font-size: 1em;
+      font-size: 1.2em; 
       padding: 10px;
+  }
+
+  .user-item, .chat-item {
+      gap: 3px;
+      padding: 8px; 
+  }
+
+  .avatar {
+      width: 25px; 
+      height: 25px;
+  }
+
+  .user-name {
+      font-size: 0.9em;
+  }
+
+  .delete-icon {
+      font-size: 14px; 
+  }
+
+  h3 {
+      font-size: 0.85em; 
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+      max-width: 220px; 
+      padding: 5px;
+  }
+
+  .app-heading {
+      font-size: 1em;
+      padding: 8px;
+  }
+
+  .user-item, .chat-item {
+      padding: 6px;
+  }
+
+  .avatar {
+      width: 20px;
+      height: 20px;
+  }
+
+  .user-name {
+      font-size: 0.85em;
+  }
+
+  .delete-icon {
+      font-size: 12px;
+  }
+
+  h3 {
+      font-size: 0.8em;
   }
 }

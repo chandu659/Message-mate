@@ -20,7 +20,6 @@
     font-size: 1em;
     font-weight: bold;
     margin-top: 10px;
-    margin-right: 10px; 
   }
 
   .user-info button {
@@ -37,3 +36,41 @@
   .user-info button:hover {
     background-color: #535bf2;
   }
+
+@media (max-width: 768px) {
+  .user-info {
+    top: 15px;
+    right: 15px;
+    gap: 8px;
+  }
+
+  .avatar {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9em;
+  }
+
+  .user-info button {
+    padding: 5px 8px;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-info {
+    top: 10px;
+    right: 10px;
+    gap: 5px;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8em;
+  }
+
+  .user-info button {
+    padding: 5px 6px;
+    font-size: 0.85em;
+  }
+}

@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0px 15px; 
+  padding: 0px 15px;
   background-color: #2e2e2e;
   color: white;
   font-size: 1.5em;
@@ -26,13 +26,13 @@
   height: 40px;
   border-radius: 50%;
   background-color: white;
-  margin-top: -20px;
+  margin-top: -30px;
 }
 
 .chat-username {
   text-transform: capitalize;
   font-weight: bold;
-  margin-top: -20px;
+  margin-top: -30px;
 }
 
 .chat-messages {
@@ -83,7 +83,7 @@
 
 .message-form input {
   flex: 1;
-  padding: px;
+  padding: 0;
   background-color: #1e1e1e;
   color: white;
   border: none;
@@ -110,5 +110,88 @@
   font-size: 1.8em;
   text-align: center;
   padding: 20px;
-  
+}
+
+
+@media (max-width: 768px) {
+  .chat-header {
+    font-size: 1.2em; 
+    padding: 10px; 
+  }
+
+  .chat-avatar {
+    width: 30px; 
+    height: 30px;
+  }
+
+  .chat-username {
+    font-size: 1em; 
+  }
+
+  .chat-messages {
+    padding: 10px; 
+  }
+
+  .msg {
+    max-width: 70%; 
+  }
+
+  .message-form {
+    width: 100%; 
+    padding: 5px; 
+    border-radius: 25px; 
+    margin: 0 auto 5px;
+  }
+
+  .message-form button {
+    padding: 5px 15px; 
+    font-size: 0.9em;
+  }
+
+  .no-chat-selected {
+    font-size: 1.5em; 
+    padding: 15px; 
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-header {
+    font-size: 1em;
+    padding: 5px;
+  }
+
+  .chat-avatar {
+    width: 25px;
+    height: 25px;
+  }
+
+  .chat-username {
+    font-size: 0.9em;
+  }
+
+  .chat-messages {
+    padding: 5px;
+  }
+
+  .msg {
+    max-width: 80%;
+    font-size: 0.9em;
+  }
+
+  .message-form {
+    width: 100%;
+    padding: 4px;
+    border-radius: 20px;
+    margin: 0 auto 5px;
+  }
+
+  .message-form button {
+    padding: 4px 12px;
+    font-size: 0.8em;
+  }
+
+  .no-chat-selected {
+    font-size: 1.2em;
+    padding: 10px;
+  }
 }
