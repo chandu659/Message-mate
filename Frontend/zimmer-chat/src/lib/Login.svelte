@@ -19,6 +19,12 @@
   }
 
   async function signUp() {
+    errorMessage = '';
+
+    if(password.length <8){
+      errorMessage = 'Password must be at least 8 characters long';
+      return;
+    }
     try {
       const data = {
         username,
@@ -59,7 +65,7 @@
                 <div class="flex justify-between">
                   <label for="username" class="text-xs font-medium text-muted-foreground group-focus-within:text-white text-gray-400">Username</label>
                 </div>
-                <input id="username" type="text" name="username" placeholder="Username" autocomplete="off" bind:value={username}
+                <input id="username" type="text" name="username" placeholder="example: Paul" autocomplete="off" bind:value={username}
                   class="block w-full border-0 bg-transparent p-0 text-sm placeholder:text-muted-foreground/90 focus:outline-none focus:ring-0 sm:leading-7 text-foreground">
               </div>
             </div>
