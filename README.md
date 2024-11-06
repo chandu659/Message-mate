@@ -25,9 +25,9 @@ After setting up and running the application, you can:
 ## Deployment
 
 ### Frontend Deployment
-The frontend of **Message Mate** is deployed on [Vercel](https://vercel.com), enabling fast and reliable hosting for the Svelte application.
+The frontend of **Message Mate** is deployed on [Vercel](https://vercel.com).
 
 ### Backend Deployment
-The backend, **PocketBase**, is deployed on [Kamatera Cloud](https://www.kamatera.com).
+The backend **PocketBase**, is deployed on [Kamatera Cloud](https://www.kamatera.com).
 
 
