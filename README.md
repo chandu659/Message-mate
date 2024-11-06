@@ -1,6 +1,9 @@
 # Message Mate
 
 Message Mate is a real-time chat application built with Svelte, Vite, and TailwindCSS. It uses [PocketBase](https://pocketbase.io/) as the backend to manage user authentication and real-time chat functionalities.
+## Application Live Link
+
+[zimmer-chat.vercel.app](https://zimmer-chat.vercel.app)
 
 ## Technologies Used
 - <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Svelte_Logo.svg" alt="Svelte Logo" width="20"/> **Svelte**
