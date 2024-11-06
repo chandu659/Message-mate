@@ -15,7 +15,7 @@ Message Mate is a real-time chat application built with Svelte, Vite, and Tailwi
 ### Install dependencies
 Clone the repository
 - cd zimmer-chat -> npm install ( pocketbase client-side SDK)
-- cd zimmer-chat/Frontend -> install
+- cd zimmer-chat/Frontend -> npm install
 
 ## Usage
 After setting up and running the application, you can:
