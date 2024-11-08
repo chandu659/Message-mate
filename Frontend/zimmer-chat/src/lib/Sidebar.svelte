@@ -16,19 +16,21 @@
   usersStore.subscribe(value => users = value);
   chatsStore.subscribe(value => chats = value);
 
-
   onMount(async () => {
     if ($currentUser) {
       await loadUsers(pb, $currentUser);
       await loadChats(pb, $currentUser);
+
       unsubscribeFromChats = await pb.collection('chats').subscribe('*', ({ action, record }) => {
         if (action === 'delete') {
           chatsStore.update(chats => chats.filter(chat => chat.id !== record.id));
           selectedChatStore.update(selectedChat => selectedChat?.id === record.id ? null : selectedChat);
         } else if (action === 'create' && record.users.includes($currentUser.id)) {
-          pb.collection('chats').getOne(record.id, { expand: 'users' }).then(updatedChat => {
-            chatsStore.update(chats => [...chats, updatedChat]);
-          }).catch(() => {});  
+          pb.collection('chats').getOne(record.id, { expand: 'users' })
+            .then(updatedChat => {
+              chatsStore.update(chats => [...chats, updatedChat]);
+            })
+            .catch(() => {});
         }
       });
     }
@@ -39,6 +41,8 @@
   });
 
   async function ensureChatExists(user) {
+    if (!$currentUser) return;  
+
     const existingChat = chats.find(chat =>
       chat.expand?.users?.some(u => u.id === user.id) &&
       chat.expand?.users?.some(u => u.id === $currentUser.id)
@@ -53,6 +57,7 @@
         const updatedChat = await pb.collection('chats').getOne(newChat.id, { expand: 'users' });
         updateSelectedChat(updatedChat);
       } catch (err) {
+        
       }
     }
   }
@@ -65,18 +70,18 @@
         try {
           await pb.collection('messages').delete(message.id);
         } catch (err) {
-          if (err.status !== 404){
+          if (err.status !== 404) {
             
-          }  
+          }
         }
       }
-      
-      await pb.collection('chats').delete(chatId);
-      await loadChats(pb, $currentUser); 
-    } catch (err) {
-      if (err.status !== 404){
 
-      }  
+      await pb.collection('chats').delete(chatId);
+      await loadChats(pb, $currentUser);
+    } catch (err) {
+      if (err.status !== 404) {
+        
+      }
     } finally {
       showDelete = false;
     }
@@ -95,6 +100,7 @@
 
 <div class="sidebar">
   <h1 class="app-heading">Message Mate</h1>
+
   <h3 class="users-heading">Registered USERS</h3>
   {#each users as user (user.id)}
     <button class="user-item" on:click={() => ensureChatExists(user)}>
@@ -108,7 +114,7 @@
     <button class="chat-item" on:click={() => updateSelectedChat(chat)}>
       {#if chat.expand?.users && chat.expand.users.length > 0}
         {#each chat.expand.users as user}
-          {#if user.id !== $currentUser.id}
+          {#if user.id !== $currentUser?.id}  
             <img src={getAvatarUrl(user.id)} alt="avatar" class="avatar" />
             <span class="user-name">{user.username || user.email}</span>
           {/if}

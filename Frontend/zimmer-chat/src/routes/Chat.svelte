@@ -1,9 +1,11 @@
 <script>
-  import { selectedChatStore } from './store';
-  import { currentUser, pb } from './pocketbase';
+  import { selectedChatStore } from '../lib/store';
+  import { currentUser, pb } from '../lib/pocketbase';
   import { onMount, onDestroy, tick } from 'svelte';
-  import { getAvatarUrl } from './util/avatar';
-  import './Chat.svelte.css';
+  import { getAvatarUrl } from '../lib/util/avatar';
+  import Sidebar from '../lib/Sidebar.svelte';
+  import Signout from '../lib/Signout.svelte';
+  import '../lib/Chat.svelte.css';
 
   let selectedChat = null;
   let lastChatId = null; 
@@ -12,6 +14,7 @@
   let unsubscribeFromChat = null;
   let chatMessagesDiv;
 
+  // Subscribe to selectedChatStore for updates
   const unsubscribeSelectedChat = selectedChatStore.subscribe(async (value) => {
     selectedChat = value;
     if (selectedChat && selectedChat.id !== lastChatId) {
@@ -62,7 +65,7 @@
         }
       });
     } catch (error) {
-
+      // Handle error
     }
   }
 
@@ -84,7 +87,7 @@
         await pb.collection('messages').create(data);
         newMessage = '';
       } catch (error) {
-
+        // Handle error
       }
     }
   }
@@ -97,34 +100,39 @@
   $: messages, scrollToBottom();
 </script>
 
-<div class="chat-content">
-  {#if selectedChat}
-    <div class="chat-header">
-      {#each selectedChat.expand.users as user}
-        {#if user.id !== $currentUser.id}
-          <img src={getAvatarUrl(user.id)} alt="avatar" class="chat-avatar" />
-          <span class="chat-username">{user.username || user.email}</span>
-        {/if}
-      {/each}
-    </div>
-    <!-- Render chat messages -->
-    <div class="chat-messages" bind:this={chatMessagesDiv}>
-      {#each messages as message (message.id)}
-        <div class="msg {message.expand?.user?.id === $currentUser.id ? 'sent' : 'received'}">
-          <p>{message.Text}</p>
-        </div>
-      {/each}
-    </div>
+<div class="app-container">
+  <Sidebar />
+  <div class="chat-content">
+    <Signout />
+    
+    {#if selectedChat}
+      
+      <div class="chat-header">
+        {#each selectedChat.expand.users as user}
+          {#if user.id !== $currentUser.id}
+            <img src={getAvatarUrl(user.id)} alt="avatar" class="chat-avatar" />
+            <span class="chat-username">{user.username || user.email}</span>
+          {/if}
+        {/each}
+      </div>
 
-    <form class="message-form" on:submit|preventDefault={handleSendMessage}>
-      <input type="text" placeholder="Type a message..." bind:value={newMessage} />
-      <button type="submit">Send</button>
-    </form>
-  {:else}
-    <div class="no-chat-selected">
-      <p>Select a user to chat.</p>
-    </div>
-  {/if}
+      <div class="chat-messages" bind:this={chatMessagesDiv}>
+        {#each messages as message (message.id)}
+          <div class="msg {message.expand?.user?.id === $currentUser.id ? 'sent' : 'received'}">
+            <p>{message.Text}</p>
+          </div>
+        {/each}
+      </div>
+
+      <form class="message-form" on:submit|preventDefault={handleSendMessage}>
+        <input type="text" placeholder="Type a message..." bind:value={newMessage} />
+        <button type="submit">Send</button>
+      </form>
+    {:else}
+      
+      <div class="no-chat-selected">
+        <p>Select a user to chat.</p>
+      </div>
+    {/if}
+  </div>
 </div>
-
-

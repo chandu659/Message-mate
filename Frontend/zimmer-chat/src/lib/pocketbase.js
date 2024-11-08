@@ -9,5 +9,4 @@ pb.authStore.onChange((auth) => {
     currentUser.set(pb.authStore.model);
 });
 
-
-pb.authStore.clear();
+// pb.authStore.clear();

@@ -1,4 +1,4 @@
-import { usersStore, chatsStore, messagesStore, updateSelectedChat } from '../store';
+import { usersStore, chatsStore, messagesStore } from '../store';
 
 export async function loadUsers(pb, currentUser) {
   try {
