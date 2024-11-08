@@ -5,6 +5,14 @@
   let username = '';
   let password = '';
   let errorMessage = '';
+  let user;
+
+  currentUser.subscribe(value =>{
+    user = value;
+    if (user){
+      push('/chat');
+    }
+  });
 
   async function login() {
   errorMessage = '';

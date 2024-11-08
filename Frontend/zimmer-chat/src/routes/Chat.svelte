@@ -6,6 +6,7 @@
   import Sidebar from '../lib/Sidebar.svelte';
   import Signout from '../lib/Signout.svelte';
   import '../lib/Chat.svelte.css';
+  import { push } from 'svelte-spa-router';
 
   let selectedChat = null;
   let lastChatId = null; 
@@ -13,7 +14,15 @@
   let newMessage = '';
   let unsubscribeFromChat = null;
   let chatMessagesDiv;
+  let user;
 
+  currentUser.subscribe(value =>{
+    user = value;
+    if(!user){
+      push('/login');
+    }
+  });
+  
   // Subscribe to selectedChatStore for updates
   const unsubscribeSelectedChat = selectedChatStore.subscribe(async (value) => {
     selectedChat = value;
@@ -100,6 +109,7 @@
   $: messages, scrollToBottom();
 </script>
 
+{#if user}
 <div class="app-container">
   <Sidebar />
   <div class="chat-content">
@@ -136,3 +146,4 @@
     {/if}
   </div>
 </div>
+{/if}
