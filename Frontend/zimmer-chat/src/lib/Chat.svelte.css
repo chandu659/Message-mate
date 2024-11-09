@@ -14,6 +14,7 @@
   box-sizing: border-box;
   background-color: #2e2e2e;
   float: right;
+  overflow-x: auto;
 }
 
 .sidebar {
@@ -93,23 +94,28 @@
 
 .message-form {
   display: flex;
+  align-items: center;
   background-color: #1e1e1e;
-  padding: 7px;
-  border-radius: 50px;
-  width: 475px;
+  padding: 10px;
+  border-radius: 30px;
+  width: 100%;
+  max-width: 475px;
   margin: 0 auto 5px;
+  box-sizing: border-box;
 }
 
 .message-form input {
   flex: 1;
-  padding: 0;
+  padding: 10px;
   background-color: #1e1e1e;
   color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 20px;
   margin-right: 10px;
   outline: none;
   transition: background-color 0.3s;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .message-form button {
@@ -118,6 +124,7 @@
   color: white;
   border: none;
   border-radius: 20px;
+  flex-shrink: 0;
 }
 
 .no-chat-selected {
@@ -156,10 +163,14 @@
   }
 
   .message-form {
-    width: 100%; 
-    padding: 5px; 
-    border-radius: 25px; 
-    margin: 0 auto 5px;
+    padding: 8px;
+    border-radius: 20px;
+    width: 90%;
+  }
+
+  .message-form input {
+    padding: 8px;
+    font-size: 0.9em;
   }
 
   .message-form button {
@@ -198,10 +209,14 @@
   }
 
   .message-form {
-    width: 100%;
-    padding: 4px;
+    padding: 6px;
     border-radius: 20px;
-    margin: 0 auto 5px;
+    width: 95%;
+  }
+
+  .message-form input {
+    padding: 6px;
+    font-size: 0.8em;
   }
 
   .message-form button {
