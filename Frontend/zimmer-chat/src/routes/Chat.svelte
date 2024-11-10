@@ -1,11 +1,11 @@
 <script>
   import { selectedChatStore } from '../lib/store';
   import { currentUser, pb } from '../lib/pocketbase';
-  import { onMount, onDestroy, tick } from 'svelte';
+  import { onDestroy, tick } from 'svelte';
   import { getAvatarUrl } from '../lib/util/avatar';
-  import Sidebar from '../lib/Sidebar.svelte';
-  import Signout from '../lib/Signout.svelte';
-  import '../lib/Chat.svelte.css';
+  import Sidebar from '../lib/components/sidebar/Sidebar.svelte';
+  import Signout from '../lib/components/signout/Signout.svelte';
+  import '../lib/components/chat/Chat.css';
   import { push } from 'svelte-spa-router';
 
   let selectedChat = null;
@@ -22,7 +22,7 @@
       push('/login');
     }
   });
-  
+
   // Subscribe to selectedChatStore for updates
   const unsubscribeSelectedChat = selectedChatStore.subscribe(async (value) => {
     selectedChat = value;

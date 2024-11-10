@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import './Delete.svelte.css';
+  import './Delete.css';
 
   const dispatch = createEventDispatcher();
   export let message = "Are you sure you want to delete this chat?";

@@ -1,6 +1,6 @@
 <script lang="js">
   import { currentUser, pb } from '../lib/pocketbase';
-  import {push, pop, replace} from 'svelte-spa-router';
+  import { push } from 'svelte-spa-router';
 
   let username = '';
   let password = '';

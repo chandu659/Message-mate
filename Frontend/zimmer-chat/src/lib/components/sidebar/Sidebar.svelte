@@ -1,11 +1,11 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
-  import { usersStore, chatsStore, updateSelectedChat, selectedChatStore } from './store';
-  import { currentUser, pb } from './pocketbase';
-  import { getAvatarUrl } from './util/avatar';
-  import { loadUsers, loadChats } from './util/chat';
-  import Delete from './Delete.svelte';
-  import './Sidebar.svelte.css';
+  import { usersStore, chatsStore, updateSelectedChat, selectedChatStore } from '../../store';
+  import { currentUser, pb } from '../../pocketbase';
+  import { getAvatarUrl } from '../../util/avatar';
+  import { loadUsers, loadChats } from '../../util/chat';
+  import Delete from '../delete/Delete.svelte';
+  import './Sidebar.css';
 
   let users = [];
   let chats = [];
